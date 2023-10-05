@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" name="com.adobe.aem.guides.wknd.spa.react.core.servlets.PostServlet">
+  <property name="sling.servlet.paths" type="String" value="/bin/my-servlet"/>
+  <property name="sling.servlet.methods" type="String" value="POST"/>
+  <service>
+    <provide interface="javax.servlet.Servlet"/>
+  </service>
+  <implementation class="com.adobe.aem.guides.wknd.spa.react.core.servlets.PostServlet"/>
+</scr:component>

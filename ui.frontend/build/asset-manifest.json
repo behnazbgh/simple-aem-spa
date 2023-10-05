@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/etc.clientlibs/wknd-spa-react/clientlibs/clientlib-react/resources/static/css/main.19acd773.css",
+    "main.js": "/etc.clientlibs/wknd-spa-react/clientlibs/clientlib-react/resources/static/js/main.396542d8.js",
+    "index.html": "/etc.clientlibs/wknd-spa-react/clientlibs/clientlib-react/resources/index.html",
+    "static/media/icon-back.svg": "/etc.clientlibs/wknd-spa-react/clientlibs/clientlib-react/resources/static/media/icon-back.f504f86828fdd10a8c724eb77fa1ec73.svg",
+    "main.19acd773.css.map": "/etc.clientlibs/wknd-spa-react/clientlibs/clientlib-react/resources/static/css/main.19acd773.css.map",
+    "main.396542d8.js.map": "/etc.clientlibs/wknd-spa-react/clientlibs/clientlib-react/resources/static/js/main.396542d8.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.19acd773.css",
+    "static/js/main.396542d8.js"
+  ]
+}

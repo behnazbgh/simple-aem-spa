@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metatype:MetaData xmlns:metatype="http://www.osgi.org/xmlns/metatype/v1.2.0" localization="OSGI-INF/l10n/com.adobe.aem.guides.wknd.spa.react.core.schedulers.SchedulerConfiguration">
+  <OCD id="com.adobe.aem.guides.wknd.spa.react.core.schedulers.SchedulerConfiguration" name="A scheduled task" description="Sling scheduler configuration ">
+    <AD id="schedulerName" type="String" name="scheduler name" description="Name of the scheduler" default="Sling\ Scheduler\ Configuration"/>
+    <AD id="cronExpression" type="String" name="Crone Expression" description="used by scheduler" default="0/20\ *\ *\ *\ *\ ?"/>
+  </OCD>
+  <Designate pid="com.adobe.aem.guides.wknd.spa.react.core.schedulers.ScheduledTask">
+    <Object ocdref="com.adobe.aem.guides.wknd.spa.react.core.schedulers.SchedulerConfiguration"/>
+  </Designate>
+</metatype:MetaData>
