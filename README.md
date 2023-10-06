@@ -1,4 +1,4 @@
-# AEM Guides - SPA Project
+# AEM-SPA Project
 
 This is the simple AEM project integrated with React:
 
