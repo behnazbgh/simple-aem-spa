@@ -1,11 +1,8 @@
-# AEM Guides - WKND SPA Project
+# AEM Guides - SPA Project
 
-This is the code companion for a series of tutorials designed for developers new to the **SPA Editor** feature in Adobe Experience Manager (AEM). There are two parallel versions of the tutorial:
+This is the simple AEM project integrated with React:
 
-* [Create your first Angular SPA in AEM](https://experienceleague.adobe.com/docs/experience-manager-learn_en/getting-started-with-aem-headless/spa-editor/angular/overview.html)
-* [Create your first React SPA in AEM](https://experienceleague.adobe.com/docs/experience-manager-learn/getting-started-with-aem-headless/spa-editor/react/overview.html)
-
-The starter and solution branches in this repository correspond to **Angular** and **React** versions of the tutorial.
+The develop branch is the most updated one.
 
 ## Modules
 
@@ -36,3 +33,5 @@ Or to deploy it to a publish instance, run
 The project has been designed for **AEM as a Cloud Service**. The project is also backward compatible with AEM **6.4.8** by adding the `classic` profile when executing a build, i.e:
 
     mvn clean install -PautoInstallSinglePackage -Pclassic
+
+    
