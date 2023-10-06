@@ -36,7 +36,7 @@ The project has been designed for **AEM as a Cloud Service**. The project is als
 
 ## How AEM integrated with React
 
-1- Create a simple component called Author under '/apps/wknd-spa-react/components/author' which contains input field and a checkbox.
+1- Create a simple component called Author under `/apps/wknd-spa-react/components/author` which contains input field and a checkbox.
 2- we need to create a sling model to inject the user data to the Java objects. For this purpose, 'Autor.java' class is created under 'core/models.
     This class extends the ComponentExporter interface which serialize the AEM component to Json type which then can be used by SPA at client side. This             interface has one method called 'getExportedType' which return resource type.
     
