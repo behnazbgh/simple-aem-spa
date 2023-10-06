@@ -4,36 +4,6 @@ This is the simple AEM project integrated with React:
 
 The develop branch is the most updated one.
 
-## Modules
-
-The main parts of the project are:
-
-* **core**: Java bundle containing all core functionality like OSGi services, listeners or schedulers, as well as component-related Java code such as servlets or request filters.
-* **ui.apps**: contains the /apps (and /etc) parts of the project, ie JS&CSS clientlibs, components, templates and runmode specific configs
-* **ui.content**: contains sample content using the components from the ui.apps
-* **ui.tests**: Java bundle containing JUnit tests that are executed server-side. This bundle is not to be deployed onto production.
-* **ui.frontend**: an optional dedicated front-end build mechanism. Depending on the branch this will be either the **React** or **Angular** source code.
-
-## How to build
-
-To build all the modules run in the project root directory the following command with Maven 3:
-
-    mvn clean install
-
-If you have a running AEM instance you can build and package the whole project and deploy into AEM with
-
-    mvn clean install -PautoInstallSinglePackage
-
-Or to deploy it to a publish instance, run
-
-    mvn clean install -PautoInstallSinglePackagePublish
-
-### Building for AEM 6.x.x
-
-The project has been designed for **AEM as a Cloud Service**. The project is also backward compatible with AEM **6.4.8** by adding the `classic` profile when executing a build, i.e:
-
-    mvn clean install -PautoInstallSinglePackage -Pclassic
-
 ## How AEM integrated with React
 
 1- Create a simple component called Author under `/apps/wknd-spa-react/components/author` which contains input field and a checkbox.
@@ -165,18 +135,33 @@ in this code, workflowSession is used.
 
 ResourceResolver is mapped to workflowSession, workflow model is retrieved from `/var/workflow/models/page-version` (This workflow created from interface and can do page versioning), workflow data is defined as payload which the path of the page.
 
+## Modules
 
+The main parts of the project are:
 
+* **core**: Java bundle containing all core functionality like OSGi services, listeners or schedulers, as well as component-related Java code such as servlets or request filters.
+* **ui.apps**: contains the /apps (and /etc) parts of the project, ie JS&CSS clientlibs, components, templates and runmode specific configs
+* **ui.content**: contains sample content using the components from the ui.apps
+* **ui.tests**: Java bundle containing JUnit tests that are executed server-side. This bundle is not to be deployed onto production.
+* **ui.frontend**: an optional dedicated front-end build mechanism. Depending on the branch this will be either the **React** or **Angular** source code.
 
+## How to build
 
+To build all the modules run in the project root directory the following command with Maven 3:
 
+    mvn clean install
 
+If you have a running AEM instance you can build and package the whole project and deploy into AEM with
 
+    mvn clean install -PautoInstallSinglePackage
 
+Or to deploy it to a publish instance, run
 
+    mvn clean install -PautoInstallSinglePackagePublish
 
+### Building for AEM 6.x.x
 
+The project has been designed for **AEM as a Cloud Service**. The project is also backward compatible with AEM **6.4.8** by adding the `classic` profile when executing a build, i.e:
 
-
-
+    mvn clean install -PautoInstallSinglePackage -Pclassic
     
