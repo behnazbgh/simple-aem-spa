@@ -39,6 +39,7 @@ The project has been designed for **AEM as a Cloud Service**. The project is als
 1- Create a simple component called Author under '/apps/wknd-spa-react/components/author' which contains input field and a checkbox.
 2- we need to create a sling model to inject the user data to the Java objects. For this purpose, 'Autor.java' class is created under 'core/models.
     This class extends the ComponentExporter interface which serialize the AEM component to Json type which then can be used by SPA at client side. This             interface has one method called 'getExportedType' which return resource type.
+    
 3- Implementation class is created and annotated with @Model so sling knows this is the sling model class.
 ```
 @Model(
@@ -62,9 +63,117 @@ static final String RESOURCE_TYPE = "wknd-spa-react/components/author
     in this class the data will come into 'props', and after checking if it not empty, render the data on AEM page which contains this component.
     The important part of this class is the mapping, with MapTo , AEM component map to the React component.
     
-    ```MapTo('wknd-spa-react/components/author')(Author, CustomEditConfig);```
+    ```
+    MapTo('wknd-spa-react/components/author')(Author, CustomEditConfig);
+    
+    ```
 
 5- after deploying this code, we would be able to see changes into component appears right a way on the front end.
+
+## AEM GET/POST Servlet
+
+AuthorServlet.java:
+this class extends `SlingSafeMethodsServlet` which only GET method is allowd, the class is annotated with `@Component`which is the way the class is registered into OSGI framework, so OSGI initilize the servlet at the start of AEM instance and keep it ready for Sling FW. Sling FW knows which method to execute based on the path, and then actual execution of the servlet happens in the serverlet container.
+
+```
+@Component(service = { Servlet.class })
+@SlingServletResourceTypes(
+        resourceTypes="wknd-spa-react/components/page",
+        methods=HttpConstants.METHOD_GET,
+        extensions="txt")
+@ServiceDescription("Author Servlet")
+```
+
+this is example is bind to `sling:resourceType`, means any resource in AEM with the given path, can trigger the servlet.
+
+PostServlet.java:
+Since this is POST method, this class extends `SlingAllMethodsServlet`.
+
+The annotation looks like this:
+
+```
+@Component(
+        service = Servlet.class,
+        property = {
+                "sling.servlet.paths=/bin/my-servlet",
+                "sling.servlet.methods=" + HttpConstants.METHOD_POST
+        })
+```
+
+*** POST method can be triggered from Postman.
+
+## AEM Scheduler
+
+with the help of Scheduler, the java code can be executed based on different configuration which is OSGI configuration management. for this reason, there are two classes created `SchedulerConfiguration` and `ScheduledTask`
+
+SchedulerConfiguration is resposible to define the items of configuration 
+
+```
+@ObjectClassDefinition(name="A scheduled task",
+        description = "Sling scheduler configuration ")
+
+ @AttributeDefinition(
+            name = "scheduler name",
+            description = "Name of the scheduler",
+            type = AttributeType.STRING
+    )
+    public String schedulerName() default "Sling Scheduler Configuration";
+
+    @AttributeDefinition(
+            name = "Crone Expression",
+            description = "used by scheduler",
+            type = AttributeType.STRING
+    )
+    public String cronExpression() default "0/20 * * * * ?";
+}
+
+```
+
+ScheduledTask class extends `Runnable`, through addScheduler() scheduler is added.
+
+```
+@Activate
+    protected void activate(SchedulerConfiguration schedulerConfiguration){
+        schedulerId = schedulerConfiguration.schedulerName().hashCode();
+        addScheduler(schedulerConfiguration);
+
+    }
+private void addScheduler(SchedulerConfiguration schedulerConfiguration) {
+        ScheduleOptions scheduleOptions = scheduler.EXPR(schedulerConfiguration.cronExpression());
+        scheduleOptions.name(String.valueOf(schedulerId));
+        scheduleOptions.canRunConcurrently(false);
+        scheduler.schedule(this, scheduleOptions);
+
+        log.info("\n ------- Schedule added --------");
+
+    }
+```
+through ScheduleOptions, we can specify variuos scheduling parameter like name, cron expression and whethere this job can be concurrent with other jobs or no.
+
+## AEM Workflow
+
+This is the example of AEM workflow triggered with GET request. we pass a payload through our request which is the page path in AEM and we want to execute this workflow on that page.
+
+in this code, workflowSession is used.
+
+```
+ WorkflowSession workflowSession = resourceResolver.adaptTo(WorkflowSession.class);
+            WorkflowModel workflowModel = workflowSession.getModel("/var/workflow/models/page-version");
+            WorkflowData workflowData = workflowSession.newWorkflowData("JCR_PATH", payload);
+            status = workflowSession.startWorkflow(workflowModel, workflowData).getState();
+```
+
+ResourceResolver is mapped to workflowSession, workflow model is retrieved from `/var/workflow/models/page-version` (This workflow created from interface and can do page versioning), workflow data is defined as payload which the path of the page.
+
+
+
+
+
+
+
+
+
+
 
 
 
