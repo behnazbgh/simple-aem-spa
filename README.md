@@ -135,6 +135,58 @@ in this code, workflowSession is used.
 
 ResourceResolver is mapped to workflowSession, workflow model is retrieved from `/var/workflow/models/page-version` (This workflow created from interface and can do page versioning), workflow data is defined as payload which the path of the page.
 
+## Unit testing in AEM
+
+There are 4 dependencies involve in AEM testin: JUnit5
+Mockito Test Framework
+Apache Sling Mocks
+AEM Mocks Test Framework (by io.wcm)
+
+in this project there is class called `AuthorServletTest.java` which annotated by `@ExtendWith(AemContextExtension.class)`.
+Test class has a setup() which annotates with @BeforeEach, meaning it runs before any other test method.so we can initialize all required mock objects here.
+
+```
+ @BeforeEach
+    public void setup() {
+        authorServlet = new AuthorServlet();
+        //create a mock jcr resource with given property
+        aemContext.build().resource("/content/spa/test" , "jcr:title", "servlet page");
+        aemContext.currentResource("/content/spa/test");
+    }
+```
+
+*** we need to create instance of AemContext because AEM related objects are not available on build time.
+    through aemContext we create a mock jcr resource with the expected property.
+
+` AemContext aemContext = new AemContext();`
+
+Next is test on the main method of our servlet:
+
+```
+@Test
+    public void testDoGet() throws ServletException, IOException {
+
+        MockSlingHttpServletRequest request = aemContext.request();
+        MockSlingHttpServletResponse response = aemContext.response();
+
+        // Call the doGet method of the servlet with mock resp and req
+        authorServlet.doGet(request, response);
+
+        assertEquals(" This is servlet page", response.getOutputAsString());
+    }
+```
+
+
+
+*** Mock resp and req are available through aemContext instance.
+
+```
+MockSlingHttpServletRequest request = aemContext.request();
+MockSlingHttpServletResponse response = aemContext.response();
+```
+
+at last assertEqual method compare the actual result with the expected one, and if it's true then test is passed.
+
 ## Modules
 
 The main parts of the project are:
