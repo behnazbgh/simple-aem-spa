@@ -8,7 +8,7 @@ The develop branch is the most updated one.
 
 1- Create a simple component called Author under `/apps/wknd-spa-react/components/author` which contains input field and a checkbox.
 2- we need to create a sling model to inject the user data to the Java objects. For this purpose, 'Autor.java' class is created under 'core/models.
-    This class extends the ComponentExporter interface which serialize the AEM component to Json type which then can be used by SPA at client side. This             interface has one method called 'getExportedType' which return resource type.
+    This class extends the ComponentExporter interface which serialize the AEM component to Json type which then can be used by SPA at client side. This interface has one method called 'getExportedType' which return resource type.
     
 3- Implementation class is created and annotated with @Model so sling knows this is the sling model class.
 ```
@@ -43,7 +43,7 @@ static final String RESOURCE_TYPE = "wknd-spa-react/components/author
 ## AEM GET/POST Servlet
 
 AuthorServlet.java:
-this class extends `SlingSafeMethodsServlet` which only GET method is allowd, the class is annotated with `@Component`which is the way the class is registered into OSGI framework, so OSGI initilize the servlet at the start of AEM instance and keep it ready for Sling FW. Sling FW knows which method to execute based on the path, and then actual execution of the servlet happens in the serverlet container.
+this class extends `SlingSafeMethodsServlet` which only GET method is allowd, the class is annotated with `@Component` which is the way the class is registered into OSGI framework, so OSGI initilize the servlet at the start of AEM instance and keep it ready for Sling FW. Sling FW knows which method to execute based on the path, and then actual execution of the servlet happens in the serverlet container.
 
 ```
 @Component(service = { Servlet.class })
@@ -175,9 +175,6 @@ Next is test on the main method of our servlet:
         assertEquals(" This is servlet page", response.getOutputAsString());
     }
 ```
-
-
-
 *** Mock resp and req are available through aemContext instance.
 
 ```
@@ -186,6 +183,69 @@ MockSlingHttpServletResponse response = aemContext.response();
 ```
 
 at last assertEqual method compare the actual result with the expected one, and if it's true then test is passed.
+
+## Event Listener (JCR Event Handling)
+Event handling done by different methods in AEM, this one is listen to the event happen at JCR nodes.
+For this part, aem service user need to be created and granted the required permission. Then it should be mapped to the bundle which needs to use this service user to run the code. For this there is factory setting i OSGI called `sling service user mapper `. In the code our class need to implements EventListener and its method called `onEvent()`. 
+
+1- Create a session and login to JCR via system user, after access to JCR, through `getObservationManager()`, event is added with required properties.
+
+```
+@Reference
+SlingRepository slingRepository;
+private Session session;
+
+session = slingRepository.loginService("aemserviceuser", null);
+session.getWorkspace().getObservationManager().addEventListener(
+                this,
+                Event.NODE_ADDED | Event.PROPERTY_ADDED,
+                "content/wknd-spa-react/us/en/home",
+                true,
+                null,
+                null,
+                false
+        );
+```
+
+## Event Listener (OSGI Event Handling)
+This event handler is preffered over JCR even handler, because in JCR, event is type iterator, and each time the event is triggered, we need to iterate over it to get the information, but in OSGI, the event is a single object.
+In OSGI event handler class, we annotate the class like below:
+
+```
+@Component(
+        service = EventHandler.class,
+        immediate = true,
+        property = {
+                EventConstants.EVENT_TOPIC +"=org/apache/sling/api/resource/Resource/ADDED",
+                EventConstants.EVENT_TOPIC + "=org/apache/sling/api/resource/Resource/CHANGED",
+                EventConstants.EVENT_TOPIC + "=org/apache/sling/api/resource/Resource/REMOVED",
+                EventConstants.EVENT_FILTER + "=(path=/content/wknd-spa-react/us/en/home/*",
+        }
+)
+```
+Topics are defined based on different sort of changes on the node. through filter we specify on which path, we are monitoring the events.
+Again here need to obtain the resourceResolver on behalf of the system user which we defined. (Unitlity class is provided for this where it return ResourceResolver on behalf of the system user).
+
+```
+  @Override
+    public void handleEvent(Event event) {
+
+        try {
+            ResourceResolver resourceResolver = ResolverUtil.newResolver(resourceResolverFactory);
+            Resource resource = resourceResolver.getResource(event.getProperty(SlingConstants.PROPERTY_PATH).toString());
+            Node node = resource.adaptTo(Node.class);
+            node.setProperty("eventHandlerTask", "Even " + event.getTopic()+ " by " + resourceResolver.getUserID());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        log.info("Resource event", event.getTopic(), event.getProperty(SlingConstants.PROPERTY_PATH));
+
+    }
+```
+
+Once we get hold of resource resolver, we can access nodes on JCR and change the properties or add other nodes.
+
 
 ## Modules
 
