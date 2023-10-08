@@ -175,9 +175,6 @@ Next is test on the main method of our servlet:
         assertEquals(" This is servlet page", response.getOutputAsString());
     }
 ```
-
-
-
 *** Mock resp and req are available through aemContext instance.
 
 ```
@@ -186,6 +183,31 @@ MockSlingHttpServletResponse response = aemContext.response();
 ```
 
 at last assertEqual method compare the actual result with the expected one, and if it's true then test is passed.
+
+## Event Listener (JCR Event Handling)
+Event handling done by different methods in AEM, this one is listen to the event happen at JCR nodes.
+For this part, aem service user need to be created and granted the required permission. Then it should be mapped to the bundle which needs to use this service user to run the code. For this there is factory setting i OSGI called `sling service user mapper `. In the code our class need to implements EventListener and its method called `onEvent()`. 
+
+1- Create a session and login to JCR via system user, after access to JCR, through `getObservationManager()`, event is added with required properties.
+
+```
+@Reference
+SlingRepository slingRepository;
+private Session session;
+
+session = slingRepository.loginService("aemserviceuser", null);
+session.getWorkspace().getObservationManager().addEventListener(
+                this,
+                Event.NODE_ADDED | Event.PROPERTY_ADDED,
+                "content/wknd-spa-react/us/en/home",
+                true,
+                null,
+                null,
+                false
+        );
+```
+
+
 
 ## Modules
 
