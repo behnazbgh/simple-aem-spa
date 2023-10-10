@@ -2,9 +2,7 @@ package com.adobe.aem.guides.wknd.spa.react.core.listeners;
 
 
 import com.adobe.aem.guides.wknd.spa.react.core.utils.ResolverUtil;
-import jdk.internal.jimage.ImageReader;
 import org.apache.sling.api.SlingConstants;
-import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;

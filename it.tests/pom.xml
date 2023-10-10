@@ -50,6 +50,12 @@
             <artifactId>slf4j-simple</artifactId>
             <version>1.7.25</version>
         </dependency>
+        <dependency>
+            <groupId>com.adobe.aem.guides</groupId>
+            <artifactId>wknd-spa-react.core</artifactId>
+            <version>1.0.3-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <profiles>

@@ -3,7 +3,7 @@
 <properties>
 <comment>WKND SPA React - Repository Structure Package</comment>
 <entry key="allowIndexDefinitions">false</entry>
-<entry key="created">2023-10-05T19:25:12.795-04:00</entry>
+<entry key="created">2023-10-09T20:57:15.001-04:00</entry>
 <entry key="groupId">com.adobe.aem.guides</entry>
 <entry key="description">Empty package that defines the structure of the Adobe Experience Manager repository the Code packages in this project deploy into.
         Any roots in the Code packages of this project should have their parent enumerated in the Filters list below.</entry>
