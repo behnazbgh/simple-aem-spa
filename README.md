@@ -133,7 +133,32 @@ in this code, workflowSession is used.
             status = workflowSession.startWorkflow(workflowModel, workflowData).getState();
 ```
 
-ResourceResolver is mapped to workflowSession, workflow model is retrieved from `/var/workflow/models/page-version` (This workflow created from interface and can do page versioning), workflow data is defined as payload which the path of the page.
+ResourceResolver is mapped to workflowSession, workflow model is retrieved from `/var/workflow/models/page-version` (This workflow created from interface and can do page versioning), workflow data is a payload which is page path, with these we can start the workflow. 
+
+Calling the API:
+`http://localhost:4502/bin/executeworkflow?page=/content/blog-spa/us/en/home/first-page`
+
+  # Custom Workflow
+
+  We can create custom workflow process in AEM which is a backend module and can be deployed seperately in AEM, It will be available withing workflow step and can be configured.
+  create a class called WorkflowStep (annotated with @Component) which implements `WorkflowProcess`. this class need to implement 
+
+```
+@Component(
+        service = WorkflowProcess.class,
+        immediate = true,
+        property = {
+                "process.label"+ " = Blog Workflow Process",
+                Constants.SERVICE_VENDOR + "=AEM SPA",
+                Constants.SERVICE_DESCRIPTION + " =AEM Custom Workflow Step. "
+        }
+)
+public void execute(WorkItem workItem, WorkflowSession workflowSession, MetaDataMap metaDataMap) {}
+```
+from workItem we can access to workflowData which is jcr page path.
+from workflowSession, we can adapt to JCR session and then access nodes in JCR.
+from metaDataMap we can access meta data configured in workflow process in Arguments section under process tab.
+
 
 ## Unit testing in AEM
 
